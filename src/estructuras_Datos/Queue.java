@@ -14,12 +14,14 @@ public class Queue <T> {
     //Atributos
     private nodeClass first;
     private nodeClass last;
-    int size;
+    private nodeClass moving;
+    private int size;
     
     //Constructor
     public Queue(){
         this.first = null;
         this.last = null;
+        this.moving = null;
         this.size = 0;
     }
     public Queue(T data){
@@ -27,17 +29,15 @@ public class Queue <T> {
     }
     // Metodos
     
-    public void insertLast(T data){
-        nodeClass node = new nodeClass(data);
-        if(isEmpty()){
+   public void insertLast(T data){
+        nodeClass <T> node = new nodeClass(data);
+        if (isEmpty()){
             this.first = node;
             this.last = node;
-            ++this.size;
-        } else {
-            
+        }else{
             node.setNext(last);
-            last = node;
-        } 
+            last=node;
+        }
         ++this.size;
     }
     
@@ -45,17 +45,26 @@ public class Queue <T> {
         return first == null;
     }
     
-    public void deleteFirst(){
+    public T deleteFirst(){
         nodeClass temp;
-        if(!isEmpty()){
-            temp = last;
-            while(temp.getNext() != first) {
-                temp = temp.getNext();
+        if (!isEmpty()){
+            if (size==1){
+                temp=this.first;
+                this.first = this.last = null;
+                size=0;
+            }else{
+                temp=last;
+                while(temp.getNext()!=first){
+                    temp=temp.getNext();
+                }
+                first = temp;
+                temp = first.getNext();
+                first.setNext(null);
+                --size;
             }
-            temp.setNext(null);
-            first = temp;
-            --this.size;
+           return (T) temp.getData();
         }
+        return null;
     }
     
     public void setEmpty(){
